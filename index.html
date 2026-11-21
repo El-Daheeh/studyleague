@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الدحيح — StudyLeague</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1220; color: #eef; line-height: 1.7; }
+  header { background: linear-gradient(135deg, #6c3ce9, #9b30d9); padding: 28px 16px; text-align: center; }
+  header h1 { font-size: 2.2rem; }
+  header p { opacity: .9; }
+  nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; background: #171a2e; padding: 10px; position: sticky; top: 0; z-index: 5; }
+  nav button { background: #23264a; color: #eef; border: 1px solid #3a3f77; padding: 8px 16px; border-radius: 999px; cursor: pointer; font-size: 1rem; }
+  nav button.active { background: #6c3ce9; }
+  main { max-width: 900px; margin: 0 auto; padding: 20px 14px 60px; }
+  section { display: none; }
+  section.active { display: block; }
+  .card { background: #1a1d33; border: 1px solid #2c3060; border-radius: 14px; padding: 16px; margin: 12px 0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .agent { background: #1a1d33; border: 1px solid #2c3060; border-radius: 14px; padding: 14px; }
+  .agent h4 { color: #c9a7ff; margin-bottom: 4px; }
+  .btn { background: #6c3ce9; color: #fff; border: none; padding: 10px 22px; border-radius: 10px; cursor: pointer; font-size: 1rem; }
+  .btn:disabled { opacity: .5; }
+  .opt { display: block; width: 100%; text-align: right; background: #23264a; color: #eef; border: 1px solid #3a3f77; padding: 10px 14px; border-radius: 10px; margin: 8px 0; cursor: pointer; font-size: 1rem; }
+  .opt.correct { background: #14532d; border-color: #22c55e; }
+  .opt.wrong { background: #5b1a1a; border-color: #ef4444; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 8px; border-bottom: 1px solid #2c3060; text-align: right; }
+  .me { color: #ffd166; font-weight: bold; }
+  #chatbox { height: 260px; overflow-y: auto; background: #12142a; border: 1px solid #2c3060; border-radius: 12px; padding: 12px; }
+  .msg { margin: 8px 0; padding: 8px 12px; border-radius: 12px; max-width: 85%; }
+  .msg.u { background: #2b2f55; margin-left: auto; }
+  .msg.a { background: #23264a; }
+  .row { display: flex; gap: 8px; margin-top: 10px; }
+  .row input { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #3a3f77; background: #12142a; color: #eef; font-size: 1rem; }
+  .price { font-size: 1.6rem; color: #ffd166; }
+  footer { text-align: center; opacity: .6; padding: 20px; font-size: .9rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🏆 الدحيح</h1>
+  <p>منصة مسابقات المذاكرة — ادرس، نافس، واصعد الترتيب (نسخة تجريبية)</p>
+  <p>نقاطي: <b id="mypoints">0</b> ⭐</p>
+</header>
+<nav>
+  <button data-t="home" class="active">الرئيسية</button>
+  <button data-t="rooms">الغرف</button>
+  <button data-t="quiz">الكويز</button>
+  <button data-t="board">الترتيب</button>
+  <button data-t="agents">الوكلاء</button>
+  <button data-t="plans">الاشتراكات</button>
+</nav>
+<main>
+  <section id="home" class="active">
+    <div class="card">
+      <h2>أهلًا بيك في الدحيح 👋</h2>
+      <p>فكرة المشروع: نحوّل المذاكرة لمسابقة. تذاكر جزء من المنهج، تدخل كويز قصير يثبت فهمك، تجمع نقاط، وترتيبك يتحرك في دوري أسبوعي مع زمايلك — من مستوى البرنامج، للكلية، للجامعة.</p>
+      <p>جرّب بنفسك: ادخل قسم <b>الكويز</b>، جاوب، وشوف نقاطك بتزيد وترتيبك بيتحرك في <b>الترتيب</b>.</p>
+    </div>
+    <div class="card">
+      <h3>إزاي بتشتغل؟</h3>
+      <p>١) ارفع ملفات موادك → ٢) الوكلاء يبنوا لك خطة وملخصات → ٣) بعد كل جزء كويز → ٤) نقاط وترتيب أسبوعي → ٥) استشارات مع الأساتذة والمعيدين.</p>
+    </div>
+  </section>
+
+  <section id="rooms">
+    <h2>غرف المسابقات</h2>
+    <div class="grid">
+      <div class="card"><h3>دوري PPIS 🏫</h3><p>مسابقة برنامج نظم المعلومات والسياسات العامة — الموسم التجريبي.</p></div>
+      <div class="card"><h3>دوري كلية التجارة 🎓</h3><p>المستوى الأوسع: أقسام الكلية ضد بعضها.</p></div>
+      <div class="card"><h3>دوري جامعة أسيوط 🌍</h3><p>المستوى الأكبر — قيد التصميم (تحدي عدالة المقارنة بين الكليات).</p></div>
+    </div>
+  </section>
+
+  <section id="quiz">
+    <h2>كويز تجريبي — مستودعات البيانات</h2>
+    <div class="card" id="quizbox"></div>
+  </section>
+
+  <section id="board">
+    <h2>الترتيب الأسبوعي</h2>
+    <div class="card">
+      <table>
+        <thead><tr><th>#</th><th>الطالب</th><th>النقاط</th></tr></thead>
+        <tbody id="boardbody"></tbody>
+      </table>
+      <p style="opacity:.7">* أسماء تجريبية للعرض — في النسخة الحقيقية الترتيب نسبي (جيرانك في الترتيب) بناءً على أدلة بحثية.</p>
+    </div>
+  </section>
+
+  <section id="agents">
+    <h2>وكلاء الدراسة — 16 وكيلًا متخصصًا</h2>
+    <p>مش 16 موديل منفصل: موديل واحد قوي + <b>راوتر</b> بيوزع طلبك على الوكيل المتخصص الصح، وكل وكيل بيبحث في ملفات موادك أنت (RAG).</p>
+    <div class="grid" id="agentgrid"></div>
+    <div class="card">
+      <h3>جرّب الوكيل (تجريبي)</h3>
+      <div id="chatbox"></div>
+      <div class="row">
+        <input id="chatin" placeholder="اسأل: عايز خطة مذاكرة / ملخص / أسئلة / كويز…">
+        <button class="btn" id="chatsend">ابعت</button>
+      </div>
+      <p style="opacity:.7">* دي محاكاة داخل المتصفح لعرض الفكرة — الوكلاء الحقيقيون يحتاجون خادمًا ومفتاح API لموديل لغوي.</p>
+    </div>
+  </section>
+
+  <section id="plans">
+    <h2>الاشتراكات</h2>
+    <div class="grid">
+      <div class="card"><h3>مجاني</h3><p class="price">0 جنيه</p><p>غرف المسابقات + كويزات أساسية + ترتيب أسبوعي.</p></div>
+      <div class="card"><h3>Premium ⭐</h3><p class="price">49 جنيه/شهر</p><p>جلسات وكلاء بلا حدود + خطط مخصصة من ملفاتك + أولوية استشارات الخبراء.</p></div>
+      <div class="card"><h3>للجامعات والمؤسسات 🏛️</h3><p class="price">ترخيص سنوي</p><p>المنصة مجانية للطلاب، والمؤسسة تدفع كخدمة تعليم رقمي — ده مصدر الدخل الأساسي.</p></div>
+    </div>
+  </section>
+</main>
+<footer>الدحيح — El-Daheeh · مشروع تخرج PPIS · نسخة تجريبية للعرض</footer>
+
+<script>
+  // التنقل
+  const btns = document.querySelectorAll('nav button');
+  btns.forEach(b => b.onclick = () => {
+    btns.forEach(x => x.classList.remove('active')); b.classList.add('active');
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.getElementById(b.dataset.t).classList.add('active');
+  });
+
+  // النقاط والترتيب
+  let pts = parseInt(localStorage.getItem('dl_points') || '0');
+  const board = [
+    { n: 'شادي هارون', p: 420 }, { n: 'ميرنا رضا', p: 385 }, { n: 'جونير منير', p: 350 },
+    { n: 'شهد بهاء', p: 310 }, { n: 'محمد أحمد', p: 275 }
+  ];
+  function renderPoints() {
+    document.getElementById('mypoints').textContent = pts;
+    const rows = [...board, { n: 'أنت (Weza)', p: pts, me: true }]
+      .sort((a, b) => b.p - a.p)
+      .map((r, i) => `<tr class="${r.me ? 'me' : ''}"><td>${i + 1}</td><td>${r.n}</td><td>${r.p}</td></tr>`).join('');
+    document.getElementById('boardbody').innerHTML = rows;
+  }
+  renderPoints();
+
+  // الكويز
+  const Q = [
+    { q: 'في معمارية Medallion، طبقة Bronze تحتوي على…؟', o: ['بيانات نظيفة ومُنمذجة', 'البيانات الخام كما هي', 'جداول النجوم فقط'], a: 1 },
+    { q: 'الـ Star Schema يتكون أساسًا من…؟', o: ['جدول حقائق + أبعاد', 'ملفات نصية', 'مفاتيح أجنبية فقط'], a: 0 },
+    { q: 'طبقة Gold تُستخدم عادةً في…؟', o: ['التخزين الخام', 'التقارير ولوحات Power BI', 'النسخ الاحتياطي'], a: 1 },
+    { q: 'وظيفة الـ ETL هي…؟', o: ['استخراج وتحويل وتحميل البيانات', 'رسم الواجهات', 'إدارة الصلاحيات'], a: 0 }
+  ];
+  let qi = 0, score = 0;
+  const qb = document.getElementById('quizbox');
+  function showQ() {
+    if (qi >= Q.length) {
+      const gained = score * 25;
+      pts += gained; localStorage.setItem('dl_points', pts); renderPoints();
+      qb.innerHTML = `<h3>خلصت! 🎉</h3><p>جاوبت ${score} من ${Q.length} صح، وكسبت <b>${gained}</b> نقطة. شوف ترتيبك الجديد في قسم الترتيب.</p><button class="btn" onclick="qi=0;score=0;showQ()">العب تاني</button>`;
+      return;
+    }
+    const it = Q[qi];
+    qb.innerHTML = `<p><b>سؤال ${qi + 1}/${Q.length}:</b> ${it.q}</p>` +
+      it.o.map((o, i) => `<button class="opt" onclick="ans(${i}, this)">${o}</button>`).join('');
+  }
+  window.ans = (i, el) => {
+    const it = Q[qi];
+    document.querySelectorAll('.opt').forEach(x => x.disabled = true);
+    if (i === it.a) { el.classList.add('correct'); score++; } else { el.classList.add('wrong'); }
+    setTimeout(() => { qi++; showQ(); }, 800);
+  };
+  showQ();
+
+  // الوكلاء
+  const AGENTS = ['مخطط المذاكرة', 'الملخِّص', 'مولِّد الأسئلة', 'صانع الكويزات', 'المصحح والمناقش', 'مدرب التركيز', 'منظم الجدول', 'باحث المصادر', 'مبسِّط المفاهيم', 'وكيل الأمثلة العملية', 'مراجع ما قبل الامتحان', 'متتبع التقدم', 'المحفِّز', 'منسق الاستشارات', 'محلل نقاط الضعف', 'حارس الدوري والترتيب'];
+  document.getElementById('agentgrid').innerHTML =
+    AGENTS.map((a, i) => `<div class="agent"><h4>${i + 1}. ${a}</h4><p>وكيل متخصص ضمن فريق الدحيح.</p></div>`).join('');
+
+  // محاكاة الوكيل (راوتر + ردود)
+  const box = document.getElementById('chatbox');
+  function addMsg(t, who) { const d = document.createElement('div'); d.className = 'msg ' + who; d.textContent = t; box.appendChild(d); box.scrollTop = box.scrollHeight; }
+  addMsg('أهلًا! أنا راوتر الدحيح 🤖 اطلب خطة، ملخص، أسئلة، أو كويز — وأنا أوصلك بالوكيل المتخصص.', 'a');
+  function reply(t) {
+    t = t.toLowerCase();
+    if (t.includes('خطة') || t.includes('جدول')) return '📅 [وكيل مخطط المذاكرة] تمام! هنقسم المنهج لأجزاء، وكل جزء له جلسة + كويز. ابعت لي اسم المادة وعدد الأيام المتاحة وأنا أبني الخطة.';
+    if (t.includes('ملخص') || t.includes('لخص')) return '📝 [وكيل الملخِّص] ابعت النص أو ارفع ملف المادة، وهرجع لك ملخص بالنقاط الأساسية وأمثلة.';
+    if (t.includes('سؤال') || t.includes('أسئلة')) return '❓ [وكيل مولِّد الأسئلة] حاضر — هولّد أسئلة من ملفات مادتك بمستويات صعوبة متدرجة.';
+    if (t.includes('كويز') || t.includes('امتحان')) return '🏆 [وكيل صانع الكويزات] الكويز جاهز في قسم الكويز فوق — نتيجته بتغذي نقاطك وترتيبك الأسبوعي مباشرة.';
+    if (t.includes('تركيز') || t.includes('مشتت')) return '🎯 [وكيل مدرب التركيز] جرّب Pomodoro: 25 دقيقة مذاكرة و5 راحة، واقفل التطبيقات المشتتة أثناء الجلسة.';
+    return '🤖 [الراوتر] فهمتك. طلبك ده يخص أحد الوكلاء الـ16 — في النسخة الكاملة هيتنفذ فعليًا من ملفات موادك. جرّب: «عايز خطة» أو «لخص لي» أو «اعمل كويز».';
+  }
+  function send() {
+    const inp = document.getElementById('chatin'); const v = inp.value.trim(); if (!v) return;
+    addMsg(v, 'u'); inp.value = ''; setTimeout(() => addMsg(reply(v), 'a'), 500);
+  }
+  document.getElementById('chatsend').onclick = send;
+  document.getElementById('chatin').addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
+</script>
+</body>
+</html>
