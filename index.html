@@ -173,9 +173,10 @@
   document.getElementById('agentgrid').innerHTML =
     AGENTS.map((a, i) => `<div class="agent"><h4>${i + 1}. ${a}</h4><p>وكيل متخصص ضمن فريق الدحيح.</p></div>`).join('');
 
-  // محاكاة الوكيل (راوتر + ردود)
+  // وكيل الدحيح: بيكلم الباك إند الحقيقي (راوتر الموديلات)، ولو مش شغال يرجع للمحاكاة
+  const API_BASE = 'http://localhost:8791';
   const box = document.getElementById('chatbox');
-  function addMsg(t, who) { const d = document.createElement('div'); d.className = 'msg ' + who; d.textContent = t; box.appendChild(d); box.scrollTop = box.scrollHeight; }
+  function addMsg(t, who) { const d = document.createElement('div'); d.className = 'msg ' + who; d.style.whiteSpace = 'pre-wrap'; d.textContent = t; box.appendChild(d); box.scrollTop = box.scrollHeight; }
   addMsg('أهلًا! أنا راوتر الدحيح 🤖 اطلب خطة، ملخص، أسئلة، أو كويز — وأنا أوصلك بالوكيل المتخصص.', 'a');
   function reply(t) {
     t = t.toLowerCase();
@@ -187,9 +188,17 @@
     if (t.includes('تركيز') || t.includes('مشتت')) return '🎯 [وكيل مدرب التركيز] جرّب Pomodoro: 25 دقيقة مذاكرة و5 راحة، واقفل التطبيقات المشتتة أثناء الجلسة.';
     return '🤖 [الراوتر] فهمتك. طلبك ده يخص أحد الوكلاء الـ16 — في النسخة الكاملة هيتنفذ فعليًا من ملفات موادك. جرّب: «عايز خطة» أو «لخص لي» أو «اعمل كويز».';
   }
-  function send() {
+  async function send() {
     const inp = document.getElementById('chatin'); const v = inp.value.trim(); if (!v) return;
-    addMsg(v, 'u'); inp.value = ''; setTimeout(() => addMsg(reply(v), 'a'), 500);
+    addMsg(v, 'u'); inp.value = '';
+    try {
+      const r = await fetch(API_BASE + '/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: v }) });
+      if (!r.ok) throw new Error('backend ' + r.status);
+      const d = await r.json();
+      addMsg(d.agent + ' — ' + d.model + '\n' + d.text, 'a');
+    } catch (e) {
+      addMsg(reply(v), 'a'); // الباك إند مش شغال: المحاكاة القديمة عشان الديمو ما يقعش
+    }
   }
   document.getElementById('chatsend').onclick = send;
   document.getElementById('chatin').addEventListener('keydown', e => { if (e.key === 'Enter') send(); });
